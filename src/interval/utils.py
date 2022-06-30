@@ -45,49 +45,49 @@ def generate_nonce(length: int, chars: str='uld', population: str='',
     return prefix + ''.join(elements) + suffix
 
 
-def check_email(email: str) -> bool:
-    """检查电子邮箱格式是否正确
+def check_email_address(address: str) -> bool:
+    """检查电子邮箱地址格式是否正确
 
     Args:
-        email: 电子邮箱
+        address: 电子邮箱地址
 
     Returns:
         格式正确返回True，否则返回False
     """
     pattern = r'\S+@\S+\.\S+'
-    match_obj = re.fullmatch(pattern, email)
+    match_obj = re.fullmatch(pattern, address)
     return bool(match_obj)
 
 
-def check_mobile(mobile: str) -> bool:
+def check_mobile_number(number: str) -> bool:
     """检查手机号码格式是否正确
 
     Args:
-        mobile: 手机号码
+        number: 手机号码
 
     Returns:
         格式正确返回True，否则返回False
     """
     pattern = r'1[3-9]\d{9}'
-    match_obj = re.fullmatch(pattern, mobile)
+    match_obj = re.fullmatch(pattern, number)
     return bool(match_obj)
 
 
-def check_id_card(id_card: str) -> bool:
+def check_id_card_number(number: str) -> bool:
     """检查身份证号码格式是否正确
 
     Args:
-        id_card: 身份证号码
+        number: 身份证号码
 
     Returns:
         格式正确返回True，否则返回False
     """
-    if len(id_card) == 18:
+    if len(number) == 18:
         pattern = r'[1-9]\d{5}[12]\d{3}(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])\d{3}[\dxX]'
-        match_obj = re.fullmatch(pattern, id_card)
+        match_obj = re.fullmatch(pattern, number)
         return bool(match_obj)
-    if len(id_card) == 15:
+    if len(number) == 15:
         pattern = r'[1-9]\d{7}(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])\d{3}'
-        match_obj = re.fullmatch(pattern, id_card)
+        match_obj = re.fullmatch(pattern, number)
         return bool(match_obj)
     return False

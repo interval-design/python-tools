@@ -8,4 +8,5 @@ Utility functions and classes used in applications of Interval Design.
 :license: MIT, see LICENSE for more details.
 """
 
+from . import ddd
 from . import utils
