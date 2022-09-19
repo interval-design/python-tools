@@ -10,8 +10,8 @@ import re
 import string
 
 
-def generate_nonce(length: int, chars: str='uld', population: str='',
-                   *, prefix: str='', suffix: str='') -> str:
+def generate_nonce(length: int, chars: str = 'uld', population: str = '',
+                   *, prefix: str = '', suffix: str = '') -> str:
     """生成固定长度的随机字符串
 
     Args:
