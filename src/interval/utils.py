@@ -5,9 +5,30 @@ interval.utils
 This module provides utility functions.
 """
 
+import logging
 import random
 import re
 import string
+
+
+def get_stream_logger(name: str, level: int | str, fmt: str) -> logging.Logger:
+    """获取日志记录器（日志输出到sys.stderr）
+
+    Args:
+        name: 日志名称
+        level: 日志级别
+        fmt: 日志格式
+
+    Returns:
+        日志记录器
+    """
+    logger = logging.getLogger(name)
+    logger.setLevel(level)
+    handler = logging.StreamHandler()
+    handler.setLevel(level)
+    handler.setFormatter(logging.Formatter(fmt))
+    logger.addHandler(handler)
+    return logger
 
 
 def generate_nonce(length: int, chars: str = 'uld', population: str = '',
