@@ -5,27 +5,33 @@ interval.utils
 This module provides utility functions.
 """
 
-import logging
+from logging import Filter, Formatter, getLogger, Logger, LogRecord, StreamHandler
 import random
 import re
 import string
+from typing import Any, Callable
 
 
 def get_stream_logger(name: str, level: int | str,
-                      formatter: logging.Formatter = None) -> logging.Logger:
+                      filters: list[Filter | Callable[[LogRecord], Any]] = None,
+                      formatter: Formatter = None) -> Logger:
     """获取日志记录器（日志输出到sys.stderr）
 
     Args:
         name: 日志名称
         level: 日志级别
+        filters: logging.Filter实例（或者以logging.LogRecord实例作为参数的函数）列表
         formatter: logging.Formatter实例
 
     Returns:
         日志记录器
     """
-    logger = logging.getLogger(name)
+    logger = getLogger(name)
     logger.setLevel(level)
-    handler = logging.StreamHandler()
+    if filters:
+        for f in filters:
+            logger.addFilter(f)
+    handler = StreamHandler()
     handler.setLevel(level)
     if formatter is not None:
         handler.setFormatter(formatter)
