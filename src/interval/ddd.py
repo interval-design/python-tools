@@ -96,15 +96,12 @@ class Aggregate(Entity):
 
 # Value Object; Unique Reference
 
-_VOT = typing.TypeVar('_VOT', bound='ValueObject')
-
-
 @dataclasses.dataclass(frozen=True)
 class ValueObject:
     """值对象"""
 
     @classmethod
-    def composite_factory(cls: type[_VOT], *args) -> _VOT | None:
+    def composite_factory(cls, *args) -> typing.Self | None:
         """To support SQLAlchemy's ORM feature: Composite Column Types"""
         for arg in args:
             if arg is not None:
@@ -217,9 +214,9 @@ def _as_dict(obj) -> Json:
     elif isinstance(obj, decimal.Decimal):
         return str(obj)
     elif isinstance(obj, enum.Enum):
-        return obj.name
+        return _as_dict(obj.value)
     elif isinstance(obj, uuid.UUID):
-        return obj.hex
+        return str(obj)
     elif isinstance(obj, Json):
         return obj
     else:
