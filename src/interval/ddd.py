@@ -33,6 +33,7 @@ __all__ = [
     'DomainEventRef',
     'DomainEvent',
     'UseCaseDTO',
+    'DDDException',
     'DomainException',
     'ServiceLayerException',
     'AdapterException',
@@ -252,17 +253,22 @@ class UseCaseDTO(DataClassJsonMixin):
 
 # Exceptions; DBAPIError Wrapper
 
-class DomainException(Exception):
+class DDDException(Exception):
+    """根异常"""
+    pass
+
+
+class DomainException(DDDException):
     """领域异常"""
     pass
 
 
-class ServiceLayerException(Exception):
+class ServiceLayerException(DDDException):
     """服务层异常"""
     pass
 
 
-class AdapterException(Exception):
+class AdapterException(DDDException):
     """适配器异常"""
     pass
 
