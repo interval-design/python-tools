@@ -65,7 +65,7 @@ class Entity:
         self.ref = ref
 
     def __eq__(self, other):
-        if not isinstance(other, self.__class__):
+        if not isinstance(other, type(self)):
             return False
         return other.ref == self.ref
 
@@ -73,7 +73,7 @@ class Entity:
         return hash(self.ref)
 
     def __repr__(self):
-        return f'<{self.__class__.__name__} {self.ref!r}>'
+        return f'<{type(self).__name__} {self.ref!r}>'
 
 
 class Aggregate(Entity):
