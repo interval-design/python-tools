@@ -255,7 +255,8 @@ class UseCaseDTO(DataClassJsonMixin):
 
 class DDDException(Exception):
     """根异常"""
-    pass
+    code: int = None  # 错误码
+    msg: str = None  # 错误信息
 
 
 class DomainException(DDDException):
