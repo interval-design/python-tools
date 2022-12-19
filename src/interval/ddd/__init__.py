@@ -26,7 +26,7 @@ from .exceptions import (
     DBAPIErrorWrapper,
     STANDARD_DBAPI_ERRORS
 )
-from valueobject import (
+from .valueobject import (
     ValueObject,
     IntegerRef,
     StringRef,
