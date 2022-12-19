@@ -9,11 +9,11 @@ from logging import Filter, Formatter, getLogger, Logger, LogRecord, StreamHandl
 import random
 import re
 import string
-from typing import Any, Callable
+import typing
 
 
 def get_stream_logger(name: str, level: int | str,
-                      filters: list[Filter | Callable[[LogRecord], Any]] = None,
+                      filters: list[Filter | typing.Callable[[LogRecord], typing.Any]] = None,
                       formatter: Formatter = None) -> Logger:
     """获取日志记录器（日志输出到sys.stderr）
 
