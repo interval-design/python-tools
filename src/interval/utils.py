@@ -5,15 +5,18 @@ interval.utils
 This module provides utility functions.
 """
 
+from decimal import Decimal
 from logging import Filter, Formatter, getLogger, Logger, LogRecord, StreamHandler
 import random
 import re
 import string
-import typing
+from typing import Any, Callable
+
+import orjson
 
 
 def get_stream_logger(name: str, level: int | str,
-                      filters: list[Filter | typing.Callable[[LogRecord], typing.Any]] = None,
+                      filters: list[Filter | Callable[[LogRecord], Any]] = None,
                       formatter: Formatter = None) -> Logger:
     """获取日志记录器（日志输出到sys.stderr）
 
@@ -74,20 +77,6 @@ def generate_nonce(length: int, chars: str = 'uld', population: str = '',
     return prefix + ''.join(elements) + suffix
 
 
-def check_email_address(address: str) -> bool:
-    """检查电子邮箱地址格式是否正确
-
-    Args:
-        address: 电子邮箱地址
-
-    Returns:
-        格式正确返回True，否则返回False
-    """
-    pattern = r'\S+@\S+\.\S+'
-    match_obj = re.fullmatch(pattern, address)
-    return bool(match_obj)
-
-
 def check_mobile_number(number: str) -> bool:
     """检查手机号码格式是否正确
 
@@ -120,3 +109,45 @@ def check_id_card_number(number: str) -> bool:
         match_obj = re.fullmatch(pattern, number)
         return bool(match_obj)
     return False
+
+
+def _orjson_default(obj: Any) -> Any:
+    if isinstance(obj, set):
+        return list(obj)
+    if isinstance(obj, Decimal):
+        return str(obj)
+    raise TypeError
+
+
+def orjson_dumps(obj: Any) -> bytes:
+    """使用orjson进行JSON序列化操作，支持set与Decimal类型
+
+    Args:
+        obj: Python对象
+
+    Returns:
+        JSON字节流
+
+    Raises:
+        orjson.JSONEncodeError: TypeError的子类
+    """
+    return orjson.dumps(
+        obj,
+        default=_orjson_default,
+        option=orjson.OPT_OMIT_MICROSECONDS | orjson.OPT_SERIALIZE_NUMPY
+    )
+
+
+def orjson_loads(obj: bytes | str) -> Any:
+    """使用orjson进行JSON反序列化操作
+
+    Args:
+        obj: JSON字节流或字符串
+
+    Returns:
+        Python对象
+
+    Raises:
+        orjson.JSONDecodeError: ValueError的子类
+    """
+    return orjson.loads(obj)

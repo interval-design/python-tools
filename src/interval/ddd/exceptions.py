@@ -12,7 +12,7 @@ import sys
 class DDDException(Exception):
     """根异常"""
     code: int = None  # 错误码
-    msg: str = None  # 错误信息
+    msg: str = None  # 错误描述
 
 
 class DomainException(DDDException):

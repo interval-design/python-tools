@@ -22,14 +22,10 @@ class ValueObject:
 
     @classmethod
     def composite_factory(cls, *args) -> typing.Self | None:
-        """To support SQLAlchemy's ORM feature: Composite Column Types"""
+        """一个工厂方法，用于支持SQLAlchemy ORM的“复合列类型”，对于“嵌套复合”不适用"""
         for arg in args:
             if arg is not None:
                 return cls(*args)  # noqa
-
-    def __composite_values__(self) -> tuple:
-        """To support SQLAlchemy's ORM feature: Composite Column Types"""
-        return dataclasses.astuple(self)
 
 
 @dataclasses.dataclass(frozen=True)
