@@ -5,10 +5,10 @@ interval.ddd.dto
 This module provides DDD data transfer object base classes.
 """
 
-import dataclasses
+from dataclasses import dataclass
 
 
-@dataclasses.dataclass
+@dataclass
 class UseCaseDTO:
     """用例返回的数据传输对象"""
     pass

@@ -40,7 +40,6 @@ class DBAPIError(AdapterException):
 
     @property
     def orig(self) -> Exception | None:
-        """Original exception"""
         return self.__cause__
 
     def __str__(self):

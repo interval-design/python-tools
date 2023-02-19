@@ -5,14 +5,57 @@ interval.utils
 This module provides utility functions.
 """
 
-from decimal import Decimal
-from logging import Filter, Formatter, getLogger, Logger, LogRecord, StreamHandler
 import random
 import re
 import string
+from decimal import Decimal
+from logging import Filter, Formatter, getLogger, Logger, LogRecord, StreamHandler
 from typing import Any, Callable
 
 import orjson
+
+
+def _orjson_default(obj: Any) -> Any:
+    if isinstance(obj, Decimal):
+        return str(obj)
+    try:
+        return list(obj)
+    except Exception:
+        raise TypeError
+
+
+def orjson_dumps(obj: Any) -> bytes:
+    """使用orjson进行JSON序列化操作，并添加对可迭代对象与Decimal的支持
+
+    Args:
+        obj: Python对象
+
+    Returns:
+        JSON字节流
+
+    Raises:
+        orjson.JSONEncodeError: TypeError的子类
+    """
+    return orjson.dumps(
+        obj,
+        default=_orjson_default,
+        option=orjson.OPT_OMIT_MICROSECONDS | orjson.OPT_SERIALIZE_NUMPY
+    )
+
+
+def orjson_loads(obj: bytes | bytearray | memoryview | str) -> Any:
+    """使用orjson进行JSON反序列化操作
+
+    Args:
+        obj: JSON字节流或字符串
+
+    Returns:
+        Python对象
+
+    Raises:
+        orjson.JSONDecodeError: ValueError的子类
+    """
+    return orjson.loads(obj)
 
 
 def get_stream_logger(name: str, level: int | str,
@@ -48,7 +91,7 @@ def generate_nonce(length: int, chars: str = 'uld', population: str = '',
 
     Args:
         length: 字符串总长度
-        chars: 使用的字符种类：'u' - 大写字母，'l' - 小写字母，'d' - 数字
+        chars: 使用的字符种类，可组合使用：'u' - 大写字母，'l' - 小写字母，'d' - 数字
         population: 使用的字符集合；若指定了population则忽略chars
         prefix: 字符串前缀
         suffix: 字符串后缀
@@ -109,45 +152,3 @@ def check_id_card_number(number: str) -> bool:
         match_obj = re.fullmatch(pattern, number)
         return bool(match_obj)
     return False
-
-
-def _orjson_default(obj: Any) -> Any:
-    if isinstance(obj, set):
-        return list(obj)
-    if isinstance(obj, Decimal):
-        return str(obj)
-    raise TypeError
-
-
-def orjson_dumps(obj: Any) -> bytes:
-    """使用orjson进行JSON序列化操作，支持set与Decimal类型
-
-    Args:
-        obj: Python对象
-
-    Returns:
-        JSON字节流
-
-    Raises:
-        orjson.JSONEncodeError: TypeError的子类
-    """
-    return orjson.dumps(
-        obj,
-        default=_orjson_default,
-        option=orjson.OPT_OMIT_MICROSECONDS | orjson.OPT_SERIALIZE_NUMPY
-    )
-
-
-def orjson_loads(obj: bytes | str) -> Any:
-    """使用orjson进行JSON反序列化操作
-
-    Args:
-        obj: JSON字节流或字符串
-
-    Returns:
-        Python对象
-
-    Raises:
-        orjson.JSONDecodeError: ValueError的子类
-    """
-    return orjson.loads(obj)
