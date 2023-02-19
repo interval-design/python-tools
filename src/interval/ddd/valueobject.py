@@ -6,7 +6,7 @@ This module provides DDD ValueObject base class and derived classes.
 """
 
 import uuid
-from dataclasses import dataclass, field
+from dataclasses import astuple, dataclass, field
 from datetime import datetime
 from typing import Self
 
@@ -26,6 +26,10 @@ class ValueObject:
         for arg in args:
             if arg is not None:
                 return cls(*args)  # noqa
+
+    def __composite_values__(self) -> tuple:
+        """用于支持SQLAlchemy ORM的“复合列类型”，对于“嵌套复合”不适用"""
+        return astuple(self)
 
 
 @dataclass(frozen=True)
