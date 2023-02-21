@@ -6,8 +6,9 @@ This module provides DDD event base classes.
 """
 
 import uuid
-from dataclasses import dataclass, field
+from dataclasses import asdict, dataclass, field
 from datetime import datetime
+from typing import Any
 
 
 @dataclass
@@ -26,3 +27,7 @@ class DomainEvent:
         default_factory=lambda: datetime.now().astimezone(),
         init=False
     )
+
+    def to_dict(self) -> dict[str, Any]:
+        """转换为字典"""
+        return asdict(self)
