@@ -15,9 +15,18 @@ from typing import Any, Callable
 import orjson
 
 
-def _orjson_default(obj: Any) -> Any:
+def safe_issubclass(class_or_object, classinfo):
+    try:
+        return issubclass(class_or_object, classinfo)
+    except TypeError:
+        return False
+
+
+def _orjson_default(obj):
     if isinstance(obj, Decimal):
         return str(obj)
+    if callable(getattr(obj, 'to_dict', None)):
+        return obj.to_dict()
     try:
         return list(obj)
     except Exception:
@@ -25,7 +34,12 @@ def _orjson_default(obj: Any) -> Any:
 
 
 def orjson_dumps(obj: Any) -> bytes:
-    """使用orjson进行JSON序列化操作，并添加对可迭代对象与Decimal的支持
+    """使用orjson进行JSON序列化操作
+
+    除了orjson默认支持的数据类型，还支持以下对象：
+    1、Decimal对象，转化为字符串；
+    2、带有to_dict()方法的对象，转化为字典；
+    3、可迭代对象，转化为列表。
 
     Args:
         obj: Python对象
