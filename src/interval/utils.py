@@ -75,24 +75,24 @@ def orjson_loads(obj: bytes | bytearray | memoryview | str) -> Any:
 def get_stream_logger(name: str, level: int | str,
                       filters: list[Filter | Callable[[LogRecord], Any]] = None,
                       formatter: Formatter = None) -> Logger:
-    """获取日志记录器（日志输出到sys.stderr）
+    """获取日志记录器（以StreamHandler作为日志处理器）
 
     Args:
         name: 日志名称
         level: 日志级别
-        filters: logging.Filter实例（或者以logging.LogRecord实例作为参数的函数）列表
-        formatter: logging.Formatter实例
+        filters: 日志处理器的过滤器列表
+        formatter: 日志处理器的格式器
 
     Returns:
         日志记录器
     """
     logger = getLogger(name)
     logger.setLevel(level)
-    if filters:
-        for f in filters:
-            logger.addFilter(f)
     handler = StreamHandler()
     handler.setLevel(level)
+    if filters:
+        for f in filters:
+            handler.addFilter(f)
     if formatter is not None:
         handler.setFormatter(formatter)
     logger.addHandler(handler)
