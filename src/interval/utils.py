@@ -10,7 +10,7 @@ import re
 import string
 from decimal import Decimal
 from logging import Filter, Formatter, getLogger, Logger, LogRecord, StreamHandler
-from typing import Any, Callable
+from typing import Any, Callable, TextIO
 
 import orjson
 
@@ -36,7 +36,7 @@ def _orjson_default(obj):
 def orjson_dumps(obj: Any) -> bytes:
     """使用orjson进行JSON序列化操作
 
-    除了orjson默认支持的数据类型，还支持以下对象：
+    除了orjson默认支持的数据类型，还支持以下类型的对象：
     1、Decimal对象，转化为字符串；
     2、带有to_dict()方法的对象，转化为字典；
     3、可迭代对象，转化为列表。
@@ -73,27 +73,32 @@ def orjson_loads(obj: bytes | bytearray | memoryview | str) -> Any:
 
 
 def get_stream_logger(name: str, level: int | str,
+                      stream: TextIO = None,
                       filters: list[Filter | Callable[[LogRecord], Any]] = None,
-                      formatter: Formatter = None) -> Logger:
-    """获取日志记录器（以StreamHandler作为日志处理器）
+                      formatter: Formatter = None,
+                      exclusive: bool = False) -> Logger:
+    """获取日志记录器（StreamHandler作为处理器）
 
     Args:
         name: 日志名称
         level: 日志级别
-        filters: 日志处理器的过滤器列表
-        formatter: 日志处理器的格式器
+        stream: 处理器的输出流，默认为sys.stderr
+        filters: 处理器的过滤器列表
+        formatter: 处理器的格式器
+        exclusive: 是否移除该日志记录器原有的全部处理器
 
     Returns:
         日志记录器
     """
     logger = getLogger(name)
     logger.setLevel(level)
-    handler = StreamHandler()
-    handler.setLevel(level)
+    if exclusive and logger.handlers:
+        logger.handlers.clear()
+    handler = StreamHandler(stream)
     if filters:
         for f in filters:
             handler.addFilter(f)
-    if formatter is not None:
+    if formatter:
         handler.setFormatter(formatter)
     logger.addHandler(handler)
     return logger
