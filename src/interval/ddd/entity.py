@@ -5,6 +5,8 @@ interval.ddd.entity
 This module provides DDD Entity base class and derived classes.
 """
 
+from .valueobject import ValueObject
+
 
 class Entity:
     """实体
@@ -12,8 +14,9 @@ class Entity:
     Attributes:
         ref: 唯一标识
     """
+    ref: ValueObject
 
-    def __init__(self, ref):
+    def __init__(self, ref: ValueObject):
         self.ref = ref
 
     def __eq__(self, other):
@@ -42,6 +45,10 @@ class Aggregate(Entity):
         obj.domain_events = []
         return obj
 
-    def __init__(self, ref, version_number: int = 1):
+    def __init__(self, ref: ValueObject, version_number: int = 1):
         super().__init__(ref)
         self.version_number = version_number
+
+    def add_lock(self):
+        """主动添加乐观锁"""
+        self.version_number += 1
