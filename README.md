@@ -19,10 +19,11 @@ pip install "interval-tools[objectid]"
 ## Quickstart
 
 ```pycon
->>> from interval.utils import get_stream_logger
->>> import logging
->>> formatter = logging.Formatter('%(levelname)s:%(name)s:%(message)s')
->>> logger = get_stream_logger('interval', 'INFO', formatter=formatter)
->>> logger.info('Readability counts.')
-INFO:interval:Readability counts.
+>>> from interval.utils import batched
+>>> for batch in batched('ABCDEFG', 3):
+...     print(batch)
+...
+('A', 'B', 'C')
+('D', 'E', 'F')
+('G',)
 ```

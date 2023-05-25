@@ -8,6 +8,7 @@ This module provides utility functions.
 import random
 import re
 import string
+import sys
 from collections.abc import Collection, Iterable, Iterator
 from datetime import datetime
 from decimal import Decimal
@@ -17,24 +18,27 @@ from typing import Any, Callable, TextIO
 
 import orjson
 
+if sys.version_info >= (3, 12):
+    from itertools import batched  # noqa
+else:
+    def batched(iterable: Iterable[Any], n: int) -> Iterator[tuple]:
+        """Python 3.12标准库itertools.batched函数的等价实现
+
+        参考文档：https://docs.python.org/3.12/library/itertools.html#itertools.batched
+        """
+        if n < 1:
+            raise ValueError('n must be at least one')
+        it = iter(iterable)
+        while batch := tuple(islice(it, n)):
+            yield batch
+
 
 def safe_issubclass(class_or_object, classinfo):
+    """调用内置函数issubclass，当参数类型错误时返回False，而非抛出异常"""
     try:
         return issubclass(class_or_object, classinfo)
     except TypeError:
         return False
-
-
-def batched(iterable: Iterable[Any], size: int) -> Iterator[tuple]:
-    """Python 3.12标准库itertools.batched函数的等价实现
-
-    (https://docs.python.org/3.12/library/itertools.html#itertools.batched)
-    """
-    if size < 1:
-        raise ValueError
-    it = iter(iterable)
-    while batch := tuple(islice(it, size)):
-        yield batch
 
 
 def get_datetime_with_local_tz(datetime_obj: datetime = None,
