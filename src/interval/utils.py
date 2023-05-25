@@ -8,7 +8,10 @@ This module provides utility functions.
 import random
 import re
 import string
+from collections.abc import Collection, Iterable, Iterator
+from datetime import datetime
 from decimal import Decimal
+from itertools import islice
 from logging import Filter, Formatter, getLogger, Logger, LogRecord, StreamHandler
 from typing import Any, Callable, TextIO
 
@@ -20,6 +23,43 @@ def safe_issubclass(class_or_object, classinfo):
         return issubclass(class_or_object, classinfo)
     except TypeError:
         return False
+
+
+def batched(iterable: Iterable[Any], size: int) -> Iterator[tuple]:
+    """Python 3.12标准库itertools.batched函数的等价实现
+
+    (https://docs.python.org/3.12/library/itertools.html#itertools.batched)
+    """
+    if size < 1:
+        raise ValueError
+    it = iter(iterable)
+    while batch := tuple(islice(it, size)):
+        yield batch
+
+
+def get_datetime_with_local_tz(datetime_obj: datetime = None,
+                               timestamp: float = None) -> datetime:
+    """获取带有本地时区的datetime对象
+
+    处理逻辑如下：
+    1、如果传入了已有的datetime对象，若是naive对象，则添加本地时区信息，若是aware对象，则将其转换为本地时区；
+    2、如果传入了已有的时间戳，则将其转换为datetime对象；
+    3、如果二者均默认不传，则获取当前系统时间。
+
+    Args:
+        datetime_obj: datetime对象
+        timestamp: 时间戳
+
+    Returns:
+        datetime对象
+    """
+    if datetime_obj is not None:
+        dt = datetime_obj
+    elif timestamp is not None:
+        dt = datetime.fromtimestamp(timestamp)
+    else:
+        dt = datetime.now()
+    return dt.astimezone()
 
 
 def _orjson_default(obj):
@@ -74,7 +114,7 @@ def orjson_loads(obj: bytes | bytearray | memoryview | str) -> Any:
 
 def get_stream_logger(name: str, level: int | str,
                       stream: TextIO = None,
-                      filters: list[Filter | Callable[[LogRecord], Any]] = None,
+                      filters: Collection[Filter | Callable[[LogRecord], Any]] = None,
                       formatter: Formatter = None,
                       exclusive: bool = False) -> Logger:
     """获取日志记录器（StreamHandler作为处理器）

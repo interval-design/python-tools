@@ -10,6 +10,8 @@ from dataclasses import asdict, dataclass, field
 from datetime import datetime
 from typing import Any
 
+from ..utils import get_datetime_with_local_tz
+
 
 @dataclass
 class DomainEvent:
@@ -17,14 +19,14 @@ class DomainEvent:
 
     Attributes:
         id: 事件ID
-        occurred_at: 事件发生时间（包含系统本地时区）
+        occurred_at: 事件发生时间（包含本地时区）
     """
     id: str = field(
         default_factory=lambda: str(uuid.uuid1()),
         init=False
     )
     occurred_at: datetime = field(
-        default_factory=lambda: datetime.now().astimezone(),
+        default_factory=get_datetime_with_local_tz,
         init=False
     )
 

@@ -10,6 +10,8 @@ from dataclasses import astuple, dataclass, field
 from datetime import datetime
 from typing import Self
 
+from ..utils import get_datetime_with_local_tz
+
 try:
     from bson import ObjectId
 except ImportError:
@@ -59,9 +61,10 @@ class UUIDRef(StringRef):
 
     @property
     def created_at(self) -> datetime:
-        """标识创建时间（包含系统本地时区）"""
-        t = (self.typed_value.time - 0x01b21dd213814000) / 10_000_000
-        return datetime.fromtimestamp(t).astimezone()
+        """标识创建时间（包含本地时区）"""
+        return get_datetime_with_local_tz(
+            timestamp=(self.typed_value.time - 0x01b21dd213814000) / 10_000_000
+        )
 
 
 def _gen_oid_str() -> str:
@@ -83,5 +86,7 @@ class OIDRef(StringRef):
 
     @property
     def created_at(self) -> datetime:
-        """标识创建时间（包含系统本地时区）"""
-        return self.typed_value.generation_time.astimezone()
+        """标识创建时间（包含本地时区）"""
+        return get_datetime_with_local_tz(
+            datetime_obj=self.typed_value.generation_time
+        )
