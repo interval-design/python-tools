@@ -33,7 +33,7 @@ else:
             yield batch
 
 
-def safe_issubclass(class_or_object, classinfo):
+def safe_issubclass(class_or_object, classinfo) -> bool:
     """调用内置函数issubclass，当参数类型错误时返回False，而非抛出异常"""
     try:
         return issubclass(class_or_object, classinfo)

@@ -26,6 +26,9 @@ from .exceptions import (
     DBAPIErrorWrapper,
     STANDARD_DBAPI_ERRORS
 )
+from .messagebus import AbstractMessageBus
+from .repo import Repository
+from .uow import AbstractUnitOfWork
 from .valueobject import (
     ValueObject,
     IntegerRef,
