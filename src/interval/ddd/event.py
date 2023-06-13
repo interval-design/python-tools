@@ -30,6 +30,11 @@ class DomainEvent:
         init=False
     )
 
+    @property
+    def correlation_id(self) -> str:
+        """相互关联标识（默认值为事件ID，事件之间不相关）"""
+        return self.id
+
     def to_dict(self) -> dict[str, Any]:
         """转换为字典"""
         return asdict(self)
