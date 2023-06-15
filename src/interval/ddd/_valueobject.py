@@ -1,8 +1,8 @@
 """
-interval.ddd.valueobject
-~~~~~~~~~~~~~~~~~~~~~~~~
+interval.ddd._valueobject
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This module provides DDD ValueObject base class and derived classes.
+This module provides ValueObject base class and derived classes.
 """
 
 import uuid

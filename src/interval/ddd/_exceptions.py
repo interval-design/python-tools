@@ -1,8 +1,8 @@
 """
-interval.ddd.exceptions
-~~~~~~~~~~~~~~~~~~~~~~~
+interval.ddd._exceptions
+~~~~~~~~~~~~~~~~~~~~~~~~
 
-This module provides DDD exceptions.
+This module provides exceptions.
 """
 
 import functools

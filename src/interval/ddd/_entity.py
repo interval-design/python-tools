@@ -1,8 +1,8 @@
 """
-interval.ddd.entity
-~~~~~~~~~~~~~~~~~~~
+interval.ddd._entity
+~~~~~~~~~~~~~~~~~~~~
 
-This module provides DDD Entity base class and derived classes.
+This module provides Entity base class and derived classes.
 """
 
 

@@ -1,8 +1,8 @@
 """
-interval.ddd.dto
-~~~~~~~~~~~~~~~~
+interval.ddd._dto
+~~~~~~~~~~~~~~~~~
 
-This module provides DDD data transfer object base classes.
+This module provides data transfer object base classes.
 """
 
 from dataclasses import asdict, dataclass

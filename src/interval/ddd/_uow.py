@@ -1,15 +1,15 @@
 """
-interval.ddd.uow
-~~~~~~~~~~~~~~~~
+interval.ddd._uow
+~~~~~~~~~~~~~~~~~
 
-This module provides DDD unit of work base classes.
+This module provides unit of work base classes.
 """
 
 import abc
 from typing import Self
 
-from .messagebus import AbstractMessageBus
-from .repo import Repository
+from ._messagebus import AbstractMessageBus
+from ._repo import Repository
 
 
 class AbstractUnitOfWork(abc.ABC):

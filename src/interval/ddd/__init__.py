@@ -5,10 +5,10 @@ interval.ddd
 This package provides basic components of Domain-Driven Design.
 """
 
-from .dto import UseCaseDTO
-from .entity import Entity, Aggregate
-from .event import DomainEvent
-from .exceptions import (
+from ._dto import UseCaseDTO
+from ._entity import Entity, Aggregate
+from ._event import DomainEvent
+from ._exceptions import (
     DDDException,
     DomainException,
     ServiceLayerException,
@@ -26,10 +26,10 @@ from .exceptions import (
     DBAPIErrorWrapper,
     STANDARD_DBAPI_ERRORS
 )
-from .messagebus import AbstractMessageBus
-from .repo import Repository
-from .uow import AbstractUnitOfWork
-from .valueobject import (
+from ._messagebus import AbstractMessageBus
+from ._repo import Repository
+from ._uow import AbstractUnitOfWork
+from ._valueobject import (
     ValueObject,
     IntegerRef,
     StringRef,

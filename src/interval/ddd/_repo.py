@@ -1,11 +1,11 @@
 """
-interval.ddd.repo
-~~~~~~~~~~~~~~~~~
+interval.ddd._repo
+~~~~~~~~~~~~~~~~~~
 
-This module provides DDD repository base classes.
+This module provides repository base classes.
 """
 
-from .entity import Aggregate
+from ._entity import Aggregate
 
 
 class Repository:

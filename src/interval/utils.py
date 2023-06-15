@@ -2,7 +2,7 @@
 interval.utils
 ~~~~~~~~~~~~~~
 
-This module provides utility functions.
+This module provides utility functions and classes.
 """
 
 import random
@@ -10,6 +10,7 @@ import re
 import string
 import sys
 from collections.abc import Collection, Iterable, Iterator
+from contextvars import ContextVar
 from datetime import datetime
 from decimal import Decimal
 from itertools import islice
@@ -215,3 +216,32 @@ def check_id_card_number(number: str) -> bool:
         match_obj = re.fullmatch(pattern, number)
         return bool(match_obj)
     return False
+
+
+class ContextGlobals:
+    """上下文全局变量类
+
+    全局变量实例支持任意属性的读写，属性使用ContextVar实现，默认值为None。
+    """
+    __slots__ = ('_vars',)
+
+    _vars: dict[str, ContextVar]
+
+    def __init__(self):
+        super().__setattr__('_vars', {})
+
+    def reset(self):
+        for var in self._vars.values():
+            var.set(None)
+
+    def _ensure_var(self, name: str):
+        if name not in self._vars:
+            self._vars[name] = ContextVar(f'globals:{name}', default=None)
+
+    def __getattr__(self, name: str) -> Any:
+        self._ensure_var(name)
+        return self._vars[name].get()
+
+    def __setattr__(self, name: str, value: Any):
+        self._ensure_var(name)
+        self._vars[name].set(value)

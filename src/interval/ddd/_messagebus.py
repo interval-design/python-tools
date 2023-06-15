@@ -1,13 +1,13 @@
 """
-interval.ddd.messagebus
-~~~~~~~~~~~~~~~~~~~~~~~
+interval.ddd._messagebus
+~~~~~~~~~~~~~~~~~~~~~~~~
 
-This module provides DDD message bus base classes.
+This module provides message bus base classes.
 """
 
 import abc
 
-from .event import DomainEvent
+from ._event import DomainEvent
 
 
 class AbstractMessageBus(abc.ABC):

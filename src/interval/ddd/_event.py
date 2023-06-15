@@ -1,8 +1,8 @@
 """
-interval.ddd.event
-~~~~~~~~~~~~~~~~~~
+interval.ddd._event
+~~~~~~~~~~~~~~~~~~~
 
-This module provides DDD event base classes.
+This module provides event base classes.
 """
 
 import uuid
