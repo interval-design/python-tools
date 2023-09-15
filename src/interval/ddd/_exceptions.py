@@ -13,6 +13,7 @@ class DDDException(Exception):
     """根异常"""
     code: int = None  # 错误码
     msg: str = None  # 错误描述
+    detail: dict = None  # 错误详情
 
 
 class DomainException(DDDException):
