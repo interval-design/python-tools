@@ -6,9 +6,9 @@ This module provides ValueObject base class and derived classes.
 """
 
 import uuid
-from dataclasses import astuple, dataclass, field
+from dataclasses import asdict, astuple, dataclass, field
 from datetime import datetime
-from typing import Self
+from typing import Any, Self
 
 from ..utils import get_datetime_with_local_tz
 
@@ -32,6 +32,10 @@ class ValueObject:
     def __composite_values__(self) -> tuple:
         """用于支持SQLAlchemy ORM的“复合列类型”，对于“嵌套复合”不适用"""
         return astuple(self)
+
+    def to_dict(self) -> dict[str, Any]:
+        """转换为字典"""
+        return asdict(self)
 
 
 @dataclass(frozen=True)
