@@ -14,7 +14,7 @@ class AbstractMessageBus(abc.ABC):
     """消息总线抽象基类"""
 
     @abc.abstractmethod
-    def publish_domain_event(self, event: DomainEvent):
+    def publish_domain_event(self, event: DomainEvent, **kwargs):
         """发布领域事件
 
         Args:
