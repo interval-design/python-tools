@@ -20,6 +20,7 @@ class DomainEvent:
     Attributes:
         id: 事件ID
         occurred_at: 事件发生时间（包含本地时区）
+        delay_ms: 事件延迟时长（毫秒）
     """
     id: str = field(
         default_factory=lambda: str(uuid.uuid1()),
@@ -27,6 +28,10 @@ class DomainEvent:
     )
     occurred_at: datetime = field(
         default_factory=get_datetime_with_local_tz,
+        init=False
+    )
+    delay_ms: int = field(
+        default=0,
         init=False
     )
 
