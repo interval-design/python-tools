@@ -11,7 +11,7 @@ import string
 import sys
 from collections.abc import Collection, Iterable, Iterator
 from contextvars import ContextVar
-from datetime import datetime
+from datetime import datetime, UTC
 from decimal import Decimal
 from itertools import islice
 from logging import Filter, Formatter, getLogger, Logger, LogRecord, StreamHandler
@@ -65,6 +65,33 @@ def get_datetime_with_local_tz(datetime_obj: datetime = None,
     else:
         dt = datetime.now()
     return dt.astimezone()
+
+
+def get_datetime_with_utc_tz(datetime_obj: datetime = None,
+                             timestamp: float = None) -> datetime:
+    """获取带有UTC时区的datetime对象
+
+    处理逻辑如下：
+    1、如果传入了已有的datetime对象，若是naive对象，则添加UTC时区信息，若是aware对象，则将其转换为UTC时区；
+    2、如果传入了已有的时间戳，则将其转换为datetime对象；
+    3、如果二者均默认不传，则获取当前系统时间。
+
+    Args:
+        datetime_obj: datetime对象
+        timestamp: 时间戳
+
+    Returns:
+        datetime对象
+    """
+    if datetime_obj is not None:
+        if datetime_obj.tzinfo:
+            return datetime_obj.astimezone(tz=UTC)
+        else:
+            return datetime_obj.replace(tzinfo=UTC)
+    elif timestamp is not None:
+        return datetime.fromtimestamp(timestamp, tz=UTC)
+    else:
+        return datetime.now(tz=UTC)
 
 
 def _orjson_default(obj):
