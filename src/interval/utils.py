@@ -4,7 +4,7 @@ interval.utils
 
 This module provides utility functions and classes.
 """
-
+import ipaddress
 import random
 import re
 import string
@@ -211,8 +211,40 @@ def generate_nonce(length: int, chars: str = 'uld', population: str = '',
     return prefix + ''.join(elements) + suffix
 
 
+def check_ip_address(address: str) -> bool:
+    """检查IP地址格式是否正确
+
+    Args:
+        address: IP地址
+
+    Returns:
+        格式正确返回True，否则返回False
+    """
+    try:
+        ipaddress.ip_address(address)
+        return True
+    except ValueError:
+        return False
+
+
+def check_domain(domain: str) -> bool:
+    """检查域名格式是否正确
+
+    Args:
+        domain: 域名
+
+    Returns:
+        格式正确返回True，否则返回False
+    """
+    if len(domain) > 253:
+        return False
+    pattern = r'([a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z][a-z0-9-]{0,61}[a-z]'
+    match_obj = re.fullmatch(pattern, domain.lower())
+    return bool(match_obj)
+
+
 def check_mobile_number(number: str) -> bool:
-    """检查手机号码格式是否正确
+    """检查手机号码（中国大陆）格式是否正确
 
     Args:
         number: 手机号码
@@ -220,13 +252,13 @@ def check_mobile_number(number: str) -> bool:
     Returns:
         格式正确返回True，否则返回False
     """
-    pattern = r'1[3-9]\d{9}'
+    pattern = r'1[3-9][0-9]{9}'
     match_obj = re.fullmatch(pattern, number)
     return bool(match_obj)
 
 
 def check_id_card_number(number: str) -> bool:
-    """检查身份证号码格式是否正确
+    """检查身份证号码（中国大陆）格式是否正确
 
     Args:
         number: 身份证号码
@@ -235,11 +267,11 @@ def check_id_card_number(number: str) -> bool:
         格式正确返回True，否则返回False
     """
     if len(number) == 18:
-        pattern = r'[1-9]\d{5}[12]\d{3}(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])\d{3}[\dxX]'
+        pattern = r'[1-9][0-9]{5}[12][0-9]{3}(0[1-9]|1[0-2])(0[1-9]|[12][0-9]|3[01])[0-9]{3}[0-9xX]'
         match_obj = re.fullmatch(pattern, number)
         return bool(match_obj)
     if len(number) == 15:
-        pattern = r'[1-9]\d{7}(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])\d{3}'
+        pattern = r'[1-9][0-9]{7}(0[1-9]|1[0-2])(0[1-9]|[12][0-9]|3[01])[0-9]{3}'
         match_obj = re.fullmatch(pattern, number)
         return bool(match_obj)
     return False
